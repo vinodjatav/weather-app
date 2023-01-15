@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 import Rectangle from "../Icons/Rectangle.png";
 import Card from "@mui/material/Card";
@@ -18,12 +18,13 @@ export const WeatherApp = () => {
             ml: "25%",
             mb: "10%",
             backgroundColor: "#222831",
-            width: "40rem",
+            width: "32rem",
             height: "20rem",
             position: "absolute",
             borderRadius: "25px",
           }}
         >
+          {/* Left Side code */}
           <CardMedia
             sx={{
               position: "absolute",
@@ -63,10 +64,10 @@ export const WeatherApp = () => {
             sx={{
               position: "absolute",
               mt: "65px",
-              ml: "-325px",
+              ml: "-260px",
               width: "20px",
               height: "20px",
-              color: "#fff"
+              color: "#fff",
             }}
           />
           <Typography
@@ -86,7 +87,7 @@ export const WeatherApp = () => {
             sx={{
               position: "absolute",
               mt: "200px",
-              ml: "-325px",
+              ml: "-260px",
               color: "#fff",
               width: "60px",
               height: "60px",
@@ -99,7 +100,7 @@ export const WeatherApp = () => {
               fontSize: "28px",
               fontFamily: "Montserrat",
               fontStyle: "normal",
-              mt: "255px"
+              mt: "255px",
             }}
           >
             29 °C
@@ -117,6 +118,120 @@ export const WeatherApp = () => {
           >
             Sunny
           </Typography>
+          {/* Right Side code */}
+          <Typography
+            sx={{
+              position: "absolute",
+              color: "#fff",
+              fontSize: "15px",
+              fontFamily: "Montserrat",
+              fontStyle: "normal",
+              mt: "30px",
+              ml: "290px",
+            }}
+          >
+            PRECIPITATION
+          </Typography>
+          <Typography
+            sx={{
+              position: "absolute",
+              color: "#fff",
+              fontSize: "15px",
+              fontFamily: "Montserrat",
+              fontStyle: "normal",
+              mt: "30px",
+              ml: "460px",
+            }}
+          >
+            0°C
+          </Typography>
+          <Typography
+            sx={{
+              position: "absolute",
+              color: "#fff",
+              fontSize: "15px",
+              fontFamily: "Montserrat",
+              fontStyle: "normal",
+              mt: "60px",
+              ml: "290px",
+            }}
+          >
+            HUMIDITY
+          </Typography>
+          <Typography
+            sx={{
+              position: "absolute",
+              color: "#fff",
+              fontSize: "15px",
+              fontFamily: "Montserrat",
+              fontStyle: "normal",
+              mt: "60px",
+              ml: "455px",
+            }}
+          >
+            42%
+          </Typography>
+          <Typography
+            sx={{
+              position: "absolute",
+              color: "#fff",
+              fontSize: "15px",
+              fontFamily: "Montserrat",
+              fontStyle: "normal",
+              mt: "90px",
+              ml: "290px",
+            }}
+          >
+            WIND
+          </Typography>
+          <Typography
+            sx={{
+              position: "absolute",
+              color: "#fff",
+              fontSize: "15px",
+              fontFamily: "Montserrat",
+              fontStyle: "normal",
+              mt: "90px",
+              ml: "440px",
+            }}
+          >
+            3 km/h
+          </Typography>
+          <Button
+            sx={{
+              position: "absolute",
+              background:
+                "linear-gradient(90.8deg, rgba(144, 217, 224, 0.9) 0.2%, rgba(84, 96, 230, 0.9) 100%)",
+              borderRadius: "10px",
+              height: "30px",
+              width: "190px",
+              mt: "270px",
+              ml: "40px",
+            }}
+          >
+            <PlaceIcon
+              sx={{
+                position: "absolute",
+                ml: "-100px",
+                width: "20px",
+                height: "20px",
+                color: "#fff",
+              }}
+            />
+            <Typography
+              sx={{
+                position: "absolute",
+                color: "#fff",
+                fontSize: "10px",
+                fontFamily: "Montserrat",
+                fontStyle: "normal",
+                mt: "2px",
+                ml: "25px",
+              }}
+            >
+              Change Location
+            </Typography>
+          </Button>
         </Box>
       </Card>
     </Stack>
