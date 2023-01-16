@@ -1,10 +1,26 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, ButtonGroup, Stack, Typography } from "@mui/material";
 import React from "react";
 import Rectangle from "../Icons/Rectangle.png";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import PlaceIcon from "@mui/icons-material/Place";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import { styled } from "@mui/system";
+
+const StyledButtonGroup = styled(ButtonGroup)({
+  // change the text color for all buttons
+  "& .MuiButtonGroup-grouped": {
+    backgroundColor: "#222831",
+    color: "#000000",
+    "&:hover": {
+      backgroundColor: "#ffffff",
+    },
+  },
+  // change the button group dividers color
+  "& .MuiButtonGroup-grouped:not(:last-of-type)": {
+    borderColor: "#131c1470",
+  },
+});
 
 export const WeatherApp = () => {
   return (
@@ -33,6 +49,9 @@ export const WeatherApp = () => {
               width: "300px",
               height: "378px",
               borderRadius: "25px",
+              background:
+                "linear-gradient(152.19deg, rgba(100, 168, 171, 0.9) -0.04%, rgba(83, 91, 230, 0.9) 100%)",
+              boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
             }}
             component="img"
             src={Rectangle}
@@ -197,6 +216,74 @@ export const WeatherApp = () => {
           >
             3 km/h
           </Typography>
+
+          <StyledButtonGroup
+            variant="contained"
+            aria-label="outlined primary button group"
+            sx={{
+              position: "absolute",
+              ml: "35px",
+              mt: "140px",
+              //   width: "50px",
+              //   height: "100px",
+              color: "warning",
+              borderRadius: "5px",
+              //   borderColor: "#131c1470",
+              ".MuiButtonGroup-root": {
+                borderColor: "#131c1470",
+              },
+            }}
+          >
+            <Button
+              sx={{
+                backgroundColor: "#222831",
+                width: "50px",
+                height: "100px",
+                color: "#000",
+              }}
+            >
+              <LightModeIcon
+                sx={{
+                  position: "absolute",
+                  mt: "-50px",
+                  ml: "-7px",
+                  color: "#000",
+                  width: "30px",
+                  height: "30px",
+                }}
+              />
+            </Button>
+            <Button
+              sx={{
+                borderColor: "#131c1470",
+                backgroundColor: "#222831",
+                width: "50px",
+                height: "100px",
+              }}
+            >
+              Two
+            </Button>
+            <Button
+              sx={{
+                borderColor: "#131c1470",
+                backgroundColor: "#222831",
+                width: "50px",
+                height: "100px",
+              }}
+            >
+              Three
+            </Button>
+            <Button
+              sx={{
+                borderColor: "#131c1470",
+                backgroundColor: "#222831",
+                width: "50px",
+                height: "100px",
+              }}
+            >
+              Four
+            </Button>
+          </StyledButtonGroup>
           <Button
             sx={{
               position: "absolute",
