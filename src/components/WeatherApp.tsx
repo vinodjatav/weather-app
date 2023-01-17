@@ -13,7 +13,7 @@ const StyledButtonGroup = styled(ButtonGroup)({
     backgroundColor: "#222831",
     color: "#000000",
     "&:hover": {
-      backgroundColor: "#ffffff",
+      backgroundColor: "#8389926b",
     },
   },
   // change the button group dividers color
@@ -23,6 +23,28 @@ const StyledButtonGroup = styled(ButtonGroup)({
 });
 
 export const WeatherApp = () => {
+  const lastFourDaysWeatherData = [
+    {
+      icon: "",
+      day: "Tue",
+      temp: "30 °C",
+    },
+    {
+      icon: "",
+      day: "Wed",
+      temp: "22 °C",
+    },
+    {
+      icon: "",
+      day: "Thu",
+      temp: "06 °C",
+    },
+    {
+      icon: "",
+      day: "Fri",
+      temp: "26 °C",
+    },
+  ];
   return (
     <Stack
       sx={{ position: "relative", height: "36rem", backgroundColor: "#1E1E1E" }}
@@ -65,7 +87,7 @@ export const WeatherApp = () => {
               fontWeight: "bold",
             }}
           >
-            Sunday
+            Tuesday
           </Typography>
           <Typography
             sx={{
@@ -77,7 +99,7 @@ export const WeatherApp = () => {
               mt: "35px",
             }}
           >
-            15 Jan 2023
+            18 Jan 2023
           </Typography>
           <PlaceIcon
             sx={{
@@ -224,67 +246,70 @@ export const WeatherApp = () => {
               position: "absolute",
               ml: "35px",
               mt: "140px",
-              //   width: "50px",
-              //   height: "100px",
-              color: "warning",
               borderRadius: "5px",
-              //   borderColor: "#131c1470",
               ".MuiButtonGroup-root": {
                 borderColor: "#131c1470",
               },
             }}
           >
-            <Button
-              sx={{
-                backgroundColor: "#222831",
-                width: "50px",
-                height: "100px",
-                color: "#000",
-              }}
-            >
-              <LightModeIcon
-                sx={{
-                  position: "absolute",
-                  mt: "-50px",
-                  ml: "-7px",
-                  color: "#000",
-                  width: "30px",
-                  height: "30px",
-                }}
-              />
-            </Button>
-            <Button
-              sx={{
-                borderColor: "#131c1470",
-                backgroundColor: "#222831",
-                width: "50px",
-                height: "100px",
-              }}
-            >
-              Two
-            </Button>
-            <Button
-              sx={{
-                borderColor: "#131c1470",
-                backgroundColor: "#222831",
-                width: "50px",
-                height: "100px",
-              }}
-            >
-              Three
-            </Button>
-            <Button
-              sx={{
-                borderColor: "#131c1470",
-                backgroundColor: "#222831",
-                width: "50px",
-                height: "100px",
-              }}
-            >
-              Four
-            </Button>
+            {lastFourDaysWeatherData.map((data) => {
+              return (
+                <Button
+                  key={data.day}
+                  sx={{
+                    backgroundColor: "#222831",
+                    width: "50px",
+                    height: "100px",
+                  }}
+                >
+                  <LightModeIcon
+                    sx={{
+                      position: "absolute",
+                      mt: "-50px",
+                      ml: "-7px",
+                      color: "#fff",
+                      width: "30px",
+                      height: "30px",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      position: "absolute",
+                      color: "#fff",
+                      fontSize: "12px",
+                      fontFamily: "Montserrat",
+                      fontStyle: "normal",
+                      mt: "10px",
+                      ml: "-7px",
+                      textTransform: "none",
+                    }}
+                  >
+                    {data.day}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      position: "absolute",
+                      color: "#fff",
+                      fontSize: "12px",
+                      fontWeight: "bold",
+                      fontFamily: "Montserrat",
+                      fontStyle: "normal",
+                      mt: "60px",
+                      ml: "-7px",
+                      textTransform: "none",
+                    }}
+                  >
+                    {data.temp}
+                  </Typography>
+                </Button>
+              );
+            })}
+            ;
           </StyledButtonGroup>
           <Button
+            onClick={() => {
+              console.log("Change location called.");
+            }}
             sx={{
               position: "absolute",
               background:
