@@ -1,5 +1,4 @@
 import { Box, Button, ButtonGroup, Stack, Typography } from "@mui/material";
-import React from "react";
 import Rectangle from "../Icons/Rectangle.png";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
@@ -7,6 +6,23 @@ import PlaceIcon from "@mui/icons-material/Place";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { styled } from "@mui/system";
 
+const WeatherData = async (cityName: string) => {
+  const key = "fbd78134647d6c1d865a4bba3aa9b9d8";
+  fetch(
+    "https://api.openweathermap.org/data/2.5/weather?q=" +
+      cityName +
+      "&appid=" +
+      key
+  )
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.cod === "404") {
+        console.log(result.message);
+      } else {
+        console.log("Result: ", result);
+      }
+    });
+};
 const StyledButtonGroup = styled(ButtonGroup)({
   // change the text color for all buttons
   "& .MuiButtonGroup-grouped": {
@@ -23,6 +39,7 @@ const StyledButtonGroup = styled(ButtonGroup)({
 });
 
 export const WeatherApp = () => {
+  WeatherData("gurugram");
   const lastFourDaysWeatherData = [
     {
       icon: "",
