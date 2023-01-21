@@ -21,10 +21,18 @@ const StyledButtonGroup = styled(ButtonGroup)({
     borderColor: "#131c1470",
   },
 });
-interface WeatherData {
-  coord: {
-    lon: number;
-    lat: number;
+interface listForcast {
+  dt: number;
+  main: {
+    temp: number;
+    feels_like: number;
+    temp_min: number;
+    temp_max: number;
+    pressure: number;
+    sea_level: number;
+    grnd_level: number;
+    humidity: number;
+    temp_kf: number;
   };
   weather: [
     {
@@ -34,81 +42,98 @@ interface WeatherData {
       icon: string;
     }
   ];
-  base: string;
-  main: {
-    temp: number;
-    feels_like: number;
-    temp_min: number;
-    temp_max: number;
-    pressure: number;
-    humidity: number;
-  };
-  visibility: number;
-  wind: {
-    speed: number;
-    deg: number;
-  };
   clouds: {
     all: number;
   };
-  dt: number;
+  wind: {
+    speed: number;
+    deg: number;
+    gust: number;
+  };
+  visibility: number;
+  pop: number;
   sys: {
-    type: number;
+    pod: string;
+  };
+  dt_txt: string;
+}
+interface WeatherData {
+  cod: "200";
+  message: 0;
+  cnt: 5;
+  list: listForcast[];
+  city: {
     id: number;
+    name: string;
+    coord: {
+      lat: number;
+      lon: number;
+    };
     country: string;
+    population: number;
+    timezone: number;
     sunrise: number;
     sunset: number;
   };
-  timezone: number;
-  id: number;
-  name: string;
-  cod: number;
 }
 
 export const WeatherApp = () => {
   const [notFoundError, setNotFoundError] = React.useState(false);
   const [weather, setWeather] = React.useState<WeatherData>({
-    coord: {
-      lon: 0,
-      lat: 0,
-    },
-    weather: [
+    cod: "200",
+    message: 0,
+    cnt: 5,
+    list: [
       {
-        id: 0,
-        main: "",
-        description: "",
-        icon: "",
+        dt: 0,
+        main: {
+          temp: 0,
+          feels_like: 0,
+          temp_min: 0,
+          temp_max: 0,
+          pressure: 0,
+          sea_level: 0,
+          grnd_level: 0,
+          humidity: 0,
+          temp_kf: 0,
+        },
+        weather: [
+          {
+            id: 0,
+            main: "",
+            description: "",
+            icon: "",
+          },
+        ],
+        clouds: {
+          all: 0,
+        },
+        wind: {
+          speed: 0,
+          deg: 0,
+          gust: 0,
+        },
+        visibility: 0,
+        pop: 0,
+        sys: {
+          pod: "",
+        },
+        dt_txt: "",
       },
     ],
-    base: "",
-    main: {
-      temp: 0,
-      feels_like: 0,
-      temp_min: 0,
-      temp_max: 0,
-      pressure: 0,
-      humidity: 0,
-    },
-    visibility: 0,
-    wind: {
-      speed: 0,
-      deg: 0,
-    },
-    clouds: {
-      all: 0,
-    },
-    dt: 0,
-    sys: {
-      type: 0,
+    city: {
       id: 0,
+      name: "",
+      coord: {
+        lat: 0,
+        lon: 0,
+      },
       country: "",
+      population: 0,
+      timezone: 0,
       sunrise: 0,
       sunset: 0,
     },
-    timezone: 0,
-    id: 0,
-    name: "",
-    cod: 0,
   });
   const weekday = [
     "Sunday",
@@ -137,10 +162,11 @@ export const WeatherApp = () => {
   React.useEffect(() => {
     const key = "fbd78134647d6c1d865a4bba3aa9b9d8";
     fetch(
-      "https://api.openweathermap.org/data/2.5/weather?q=" +
+      "https://api.openweathermap.org/data/2.5/forecast?q=" +
         cityName +
         "&appid=" +
-        key
+        key +
+        "&cnt=24"
     )
       .then((response) => response.json())
       .then((result) => {
@@ -149,7 +175,7 @@ export const WeatherApp = () => {
           console.log(result.message);
         } else {
           setWeather(result);
-          setDate(ConvertTimeUnixIntoIST(result.dt));
+          setDate(ConvertTimeUnixIntoIST(result.list[0].dt));
           console.log(result);
         }
       })
@@ -257,9 +283,10 @@ export const WeatherApp = () => {
               ml: "20px",
             }}
           >
-            {weather.name},{weather.sys.country}
+            {weather.city.name}, {weather.city.country}
           </Typography>
-          <LightModeIcon
+          <Box
+            component="img"
             sx={{
               position: "absolute",
               mt: "200px",
@@ -268,6 +295,8 @@ export const WeatherApp = () => {
               width: "60px",
               height: "60px",
             }}
+            alt="Weather icon"
+            src={`http://openweathermap.org/img/w/${weather.list[0].weather[0].icon}.png`}
           />
           <Typography
             sx={{
@@ -279,7 +308,7 @@ export const WeatherApp = () => {
               mt: "255px",
             }}
           >
-            {(weather.main.temp - 273.15).toFixed(2)} °C
+            {(weather.list[0].main.temp - 273.15).toFixed(2)} °C
           </Typography>
           <Typography
             sx={{
@@ -291,7 +320,7 @@ export const WeatherApp = () => {
               mt: "300px",
             }}
           >
-            {weather.weather[0].main}
+            {weather.list[0].weather[0].main}
           </Typography>
           {/* Right Side code */}
           <Typography
@@ -315,10 +344,10 @@ export const WeatherApp = () => {
               fontFamily: "Montserrat",
               fontStyle: "normal",
               mt: "30px",
-              ml: "460px",
+              ml: "445px",
             }}
           >
-            {weather.visibility}
+            {weather.list[0].visibility} m
           </Typography>
           <Typography
             sx={{
@@ -344,7 +373,7 @@ export const WeatherApp = () => {
               ml: "455px",
             }}
           >
-            {weather.main.humidity}%
+            {weather.list[0].main.humidity} %
           </Typography>
           <Typography
             sx={{
@@ -367,10 +396,10 @@ export const WeatherApp = () => {
               fontFamily: "Montserrat",
               fontStyle: "normal",
               mt: "90px",
-              ml: "440px",
+              ml: "455px",
             }}
           >
-            {weather.wind.speed} m/s
+            {weather.list[0].wind.speed} m/s
           </Typography>
 
           <StyledButtonGroup
@@ -438,7 +467,6 @@ export const WeatherApp = () => {
                 </Button>
               );
             })}
-            ;
           </StyledButtonGroup>
           <Button
             onClick={() => {
