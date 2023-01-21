@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Box, Button, ButtonGroup, Stack, Typography } from "@mui/material";
 import Rectangle from "../Icons/Rectangle.png";
 import Card from "@mui/material/Card";
@@ -6,23 +7,6 @@ import PlaceIcon from "@mui/icons-material/Place";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { styled } from "@mui/system";
 
-const WeatherData = async (cityName: string) => {
-  const key = "fbd78134647d6c1d865a4bba3aa9b9d8";
-  fetch(
-    "https://api.openweathermap.org/data/2.5/weather?q=" +
-      cityName +
-      "&appid=" +
-      key
-  )
-    .then((response) => response.json())
-    .then((result) => {
-      if (result.cod === "404") {
-        console.log(result.message);
-      } else {
-        console.log("Result: ", result);
-      }
-    });
-};
 const StyledButtonGroup = styled(ButtonGroup)({
   // change the text color for all buttons
   "& .MuiButtonGroup-grouped": {
@@ -37,9 +21,143 @@ const StyledButtonGroup = styled(ButtonGroup)({
     borderColor: "#131c1470",
   },
 });
+interface WeatherData {
+  coord: {
+    lon: number;
+    lat: number;
+  };
+  weather: [
+    {
+      id: number;
+      main: string;
+      description: string;
+      icon: string;
+    }
+  ];
+  base: string;
+  main: {
+    temp: number;
+    feels_like: number;
+    temp_min: number;
+    temp_max: number;
+    pressure: number;
+    humidity: number;
+  };
+  visibility: number;
+  wind: {
+    speed: number;
+    deg: number;
+  };
+  clouds: {
+    all: number;
+  };
+  dt: number;
+  sys: {
+    type: number;
+    id: number;
+    country: string;
+    sunrise: number;
+    sunset: number;
+  };
+  timezone: number;
+  id: number;
+  name: string;
+  cod: number;
+}
 
 export const WeatherApp = () => {
-  WeatherData("gurugram");
+  const [notFoundError, setNotFoundError] = React.useState(false);
+  const [weather, setWeather] = React.useState<WeatherData>({
+    coord: {
+      lon: 0,
+      lat: 0,
+    },
+    weather: [
+      {
+        id: 0,
+        main: "",
+        description: "",
+        icon: "",
+      },
+    ],
+    base: "",
+    main: {
+      temp: 0,
+      feels_like: 0,
+      temp_min: 0,
+      temp_max: 0,
+      pressure: 0,
+      humidity: 0,
+    },
+    visibility: 0,
+    wind: {
+      speed: 0,
+      deg: 0,
+    },
+    clouds: {
+      all: 0,
+    },
+    dt: 0,
+    sys: {
+      type: 0,
+      id: 0,
+      country: "",
+      sunrise: 0,
+      sunset: 0,
+    },
+    timezone: 0,
+    id: 0,
+    name: "",
+    cod: 0,
+  });
+  const weekday = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const [cityName, setCityName] = React.useState<string>("Gurugram");
+  const [date, setDate] = React.useState<Date>(new Date());
+
+  const ConvertTimeUnixIntoIST = (unixTime: number) => {
+    const convertedTime = new Date(unixTime * 1000);
+    return convertedTime;
+  };
+
+  const formatDate = (date: Date) => {
+    let ye = new Intl.DateTimeFormat("en", { year: "numeric" }).format(date);
+    let mo = new Intl.DateTimeFormat("en", { month: "short" }).format(date);
+    let da = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(date);
+    return `${da} ${mo} ${ye}`;
+  };
+
+  React.useEffect(() => {
+    const key = "fbd78134647d6c1d865a4bba3aa9b9d8";
+    fetch(
+      "https://api.openweathermap.org/data/2.5/weather?q=" +
+        cityName +
+        "&appid=" +
+        key
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.cod === "404") {
+          setNotFoundError(true);
+          console.log(result.message);
+        } else {
+          setWeather(result);
+          setDate(ConvertTimeUnixIntoIST(result.dt));
+          console.log(result);
+        }
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }, []);
+
   const lastFourDaysWeatherData = [
     {
       icon: "",
@@ -104,7 +222,7 @@ export const WeatherApp = () => {
               fontWeight: "bold",
             }}
           >
-            Tuesday
+            {weekday[date.getDay()]}
           </Typography>
           <Typography
             sx={{
@@ -116,7 +234,7 @@ export const WeatherApp = () => {
               mt: "35px",
             }}
           >
-            18 Jan 2023
+            {formatDate(date)}
           </Typography>
           <PlaceIcon
             sx={{
@@ -139,7 +257,7 @@ export const WeatherApp = () => {
               ml: "20px",
             }}
           >
-            Sheopur, MP, India
+            {weather.name},{weather.sys.country}
           </Typography>
           <LightModeIcon
             sx={{
@@ -161,9 +279,8 @@ export const WeatherApp = () => {
               mt: "255px",
             }}
           >
-            29 °C
+            {(weather.main.temp - 273.15).toFixed(2)} °C
           </Typography>
-
           <Typography
             sx={{
               position: "absolute",
@@ -174,7 +291,7 @@ export const WeatherApp = () => {
               mt: "300px",
             }}
           >
-            Sunny
+            {weather.weather[0].main}
           </Typography>
           {/* Right Side code */}
           <Typography
@@ -188,7 +305,7 @@ export const WeatherApp = () => {
               ml: "290px",
             }}
           >
-            PRECIPITATION
+            VISIBILITY
           </Typography>
           <Typography
             sx={{
@@ -201,7 +318,7 @@ export const WeatherApp = () => {
               ml: "460px",
             }}
           >
-            0°C
+            {weather.visibility}
           </Typography>
           <Typography
             sx={{
@@ -227,7 +344,7 @@ export const WeatherApp = () => {
               ml: "455px",
             }}
           >
-            42%
+            {weather.main.humidity}%
           </Typography>
           <Typography
             sx={{
@@ -253,7 +370,7 @@ export const WeatherApp = () => {
               ml: "440px",
             }}
           >
-            3 km/h
+            {weather.wind.speed} m/s
           </Typography>
 
           <StyledButtonGroup
