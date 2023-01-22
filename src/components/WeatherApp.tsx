@@ -255,9 +255,7 @@ export const WeatherApp = () => {
     },
   ];
   return (
-    <Stack
-      sx={{ position: "relative", height: "36rem", backgroundColor: "#1E1E1E" }}
-    >
+    <Stack sx={{ position: "relative" }}>
       <Card>
         <Box
           sx={{
