@@ -206,6 +206,7 @@ export const WeatherApp = () => {
         if (result.cod === "404") {
           setNotFoundError(true);
         } else {
+          setNotFoundError(false);
           setWeather(result);
           setDate(ConvertTimeUnixIntoIST(result?.list[0]?.dt));
           setForecastData({
