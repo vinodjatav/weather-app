@@ -1,12 +1,12 @@
-import React from 'react';
 import './App.css';
+import { Box } from '@mui/material';
 import { WeatherApp } from './components/WeatherApp';
 
 function App() {
   return (
-    <div className="App">
+    <Box className="App" >
       <WeatherApp/>
-    </div>
+    </Box>
   );
 }
 
