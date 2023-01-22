@@ -4,8 +4,8 @@ import Rectangle from "../Icons/Rectangle.png";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import PlaceIcon from "@mui/icons-material/Place";
-import LightModeIcon from "@mui/icons-material/LightMode";
 import { styled } from "@mui/system";
+import { ChangeLocation } from "./ChangeLocation";
 
 const StyledButtonGroup = styled(ButtonGroup)({
   // change the text color for all buttons
@@ -21,6 +21,16 @@ const StyledButtonGroup = styled(ButtonGroup)({
     borderColor: "#131c1470",
   },
 });
+interface ForecastDate {
+  date: number;
+  cityName: string;
+  icon: string;
+  temperature: number;
+  mainView: string;
+  visibility: number;
+  humidity: number;
+  wind: number;
+}
 interface listForcast {
   dt: number;
   main: {
@@ -58,9 +68,9 @@ interface listForcast {
   dt_txt: string;
 }
 interface WeatherData {
-  cod: "200";
-  message: 0;
-  cnt: 5;
+  cod: string;
+  message: number;
+  cnt: number;
   list: listForcast[];
   city: {
     id: number;
@@ -78,7 +88,11 @@ interface WeatherData {
 }
 
 export const WeatherApp = () => {
+  const [open, setOpen] = React.useState(false);
+  const [cityName, setCityName] = React.useState("Gurugram");
+  const [date, setDate] = React.useState<Date>(new Date());
   const [notFoundError, setNotFoundError] = React.useState(false);
+  const [dayIndex, setDayIndex] = React.useState(0);
   const [weather, setWeather] = React.useState<WeatherData>({
     cod: "200",
     message: 0,
@@ -135,6 +149,27 @@ export const WeatherApp = () => {
       sunset: 0,
     },
   });
+  const [forecastData, setForecastData] = React.useState<ForecastDate>({
+    date: 0,
+    cityName: "",
+    icon: "",
+    temperature: 0,
+    mainView: "",
+    visibility: 0,
+    humidity: 0,
+    wind: 0,
+  });
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (newValue?: string) => {
+    setOpen(false);
+
+    if (newValue) {
+      setCityName(newValue);
+    }
+  };
   const weekday = [
     "Sunday",
     "Monday",
@@ -144,8 +179,6 @@ export const WeatherApp = () => {
     "Friday",
     "Saturday",
   ];
-  const [cityName, setCityName] = React.useState<string>("Gurugram");
-  const [date, setDate] = React.useState<Date>(new Date());
 
   const ConvertTimeUnixIntoIST = (unixTime: number) => {
     const convertedTime = new Date(unixTime * 1000);
@@ -160,7 +193,7 @@ export const WeatherApp = () => {
   };
 
   React.useEffect(() => {
-    const key = "fbd78134647d6c1d865a4bba3aa9b9d8";
+    const key = "some-key";
     fetch(
       "https://api.openweathermap.org/data/2.5/forecast?q=" +
         cityName +
@@ -172,38 +205,52 @@ export const WeatherApp = () => {
       .then((result) => {
         if (result.cod === "404") {
           setNotFoundError(true);
-          console.log(result.message);
         } else {
           setWeather(result);
-          setDate(ConvertTimeUnixIntoIST(result.list[0].dt));
-          console.log(result);
+          setDate(ConvertTimeUnixIntoIST(result?.list[0]?.dt));
+          setForecastData({
+            date: result?.list[0]?.dt,
+            cityName: result?.city?.name + ", " + result?.city?.country,
+            icon: result?.list[0]?.weather[0]?.icon,
+            temperature: result?.list[0]?.main?.temp,
+            mainView: result?.list[0]?.weather[0]?.main,
+            visibility: result?.list[0]?.visibility,
+            humidity: result?.list[0]?.main?.humidity,
+            wind: result?.list[0]?.wind?.speed,
+          });
         }
       })
       .catch((error) => {
         console.log(error.message);
       });
-  }, []);
+  }, [cityName]);
 
-  const lastFourDaysWeatherData = [
+  const onClickHandlerForecastData = (event: any, key: number) => {
+    setDayIndex(key);
+    setDate(ConvertTimeUnixIntoIST(weather.list[key].dt));
+    setForecastData({
+      date: weather?.list[key]?.dt,
+      cityName: weather?.city?.name + ", " + weather?.city?.country,
+      icon: weather?.list[key]?.weather[0]?.icon,
+      temperature: weather?.list[key]?.main?.temp,
+      mainView: weather?.list[key]?.weather[0]?.main,
+      visibility: weather?.list[key]?.visibility,
+      humidity: weather?.list[key]?.main?.humidity,
+      wind: weather?.list[key]?.wind?.speed,
+    });
+  };
+  const lastFourDaysKeys = [
     {
-      icon: "",
-      day: "Tue",
-      temp: "30 °C",
+      key: 0,
     },
     {
-      icon: "",
-      day: "Wed",
-      temp: "22 °C",
+      key: 6,
     },
     {
-      icon: "",
-      day: "Thu",
-      temp: "06 °C",
+      key: 12,
     },
     {
-      icon: "",
-      day: "Fri",
-      temp: "26 °C",
+      key: 23,
     },
   ];
   return (
@@ -248,7 +295,7 @@ export const WeatherApp = () => {
               fontWeight: "bold",
             }}
           >
-            {weekday[date.getDay()]}
+            {weekday[date?.getDay()]}
           </Typography>
           <Typography
             sx={{
@@ -283,7 +330,7 @@ export const WeatherApp = () => {
               ml: "20px",
             }}
           >
-            {weather.city.name}, {weather.city.country}
+            {forecastData?.cityName}
           </Typography>
           <Box
             component="img"
@@ -296,7 +343,7 @@ export const WeatherApp = () => {
               height: "60px",
             }}
             alt="Weather icon"
-            src={`http://openweathermap.org/img/w/${weather.list[0].weather[0].icon}.png`}
+            src={`http://openweathermap.org/img/w/${forecastData.icon}.png`}
           />
           <Typography
             sx={{
@@ -308,7 +355,7 @@ export const WeatherApp = () => {
               mt: "255px",
             }}
           >
-            {(weather.list[0].main.temp - 273.15).toFixed(2)} °C
+            {(forecastData?.temperature - 273.15).toFixed(2)} °C
           </Typography>
           <Typography
             sx={{
@@ -320,7 +367,7 @@ export const WeatherApp = () => {
               mt: "300px",
             }}
           >
-            {weather.list[0].weather[0].main}
+            {forecastData?.mainView}
           </Typography>
           {/* Right Side code */}
           <Typography
@@ -344,10 +391,10 @@ export const WeatherApp = () => {
               fontFamily: "Montserrat",
               fontStyle: "normal",
               mt: "30px",
-              ml: "445px",
+              ml: "435px",
             }}
           >
-            {weather.list[0].visibility} m
+            {forecastData?.visibility} m
           </Typography>
           <Typography
             sx={{
@@ -373,7 +420,7 @@ export const WeatherApp = () => {
               ml: "455px",
             }}
           >
-            {weather.list[0].main.humidity} %
+            {forecastData?.humidity} %
           </Typography>
           <Typography
             sx={{
@@ -396,10 +443,10 @@ export const WeatherApp = () => {
               fontFamily: "Montserrat",
               fontStyle: "normal",
               mt: "90px",
-              ml: "455px",
+              ml: "435px",
             }}
           >
-            {weather.list[0].wind.speed} m/s
+            {forecastData?.wind} m/s
           </Typography>
 
           <StyledButtonGroup
@@ -415,17 +462,24 @@ export const WeatherApp = () => {
               },
             }}
           >
-            {lastFourDaysWeatherData.map((data) => {
+            {lastFourDaysKeys.map((data) => {
               return (
                 <Button
-                  key={data.day}
+                  onClick={(e) => {
+                    onClickHandlerForecastData(e, data.key);
+                  }}
+                  key={data.key}
                   sx={{
-                    backgroundColor: "#222831",
                     width: "50px",
                     height: "100px",
                   }}
+                  style={{
+                    backgroundColor:
+                      dayIndex === data.key ? "#8389926b" : "#222831",
+                  }}
                 >
-                  <LightModeIcon
+                  <Box
+                    component="img"
                     sx={{
                       position: "absolute",
                       mt: "-50px",
@@ -434,6 +488,10 @@ export const WeatherApp = () => {
                       width: "30px",
                       height: "30px",
                     }}
+                    alt="Icon"
+                    src={`http://openweathermap.org/img/w/${
+                      weather?.list[data.key]?.weather[0]?.icon
+                    }.png`}
                   />
                   <Typography
                     sx={{
@@ -447,7 +505,11 @@ export const WeatherApp = () => {
                       textTransform: "none",
                     }}
                   >
-                    {data.day}
+                    {weekday[
+                      ConvertTimeUnixIntoIST(
+                        weather?.list[data.key]?.dt
+                      ).getDay()
+                    ]?.substring(0, 3)}
                   </Typography>
                   <Typography
                     sx={{
@@ -462,16 +524,15 @@ export const WeatherApp = () => {
                       textTransform: "none",
                     }}
                   >
-                    {data.temp}
+                    {(weather?.list[data.key]?.main?.temp - 273.15).toFixed(0)}{" "}
+                    °C
                   </Typography>
                 </Button>
               );
             })}
           </StyledButtonGroup>
           <Button
-            onClick={() => {
-              console.log("Change location called.");
-            }}
+            onClick={handleClickOpen}
             sx={{
               position: "absolute",
               background:
@@ -506,6 +567,27 @@ export const WeatherApp = () => {
               Change Location
             </Typography>
           </Button>
+          <ChangeLocation
+            id="change-location"
+            open={open}
+            value={cityName}
+            onClose={handleClose}
+          />
+          {notFoundError && (
+            <Typography
+              sx={{
+                position: "absolute",
+                mt: "330px",
+                backgroundColor: "#ec6313d9",
+                color: "#fff",
+                ml: "330px",
+                width: "130px",
+                borderRadius: "12px",
+              }}
+            >
+              City not found.
+            </Typography>
+          )}
         </Box>
       </Card>
     </Stack>
