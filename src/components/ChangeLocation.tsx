@@ -42,7 +42,7 @@ export const ChangeLocation = (props: DialogProps) => {
       }}
       PaperProps={{
         style: {
-          backgroundColor: "#304565",
+          background: "linear-gradient(152.19deg, rgb(102 152 155) -0.04%, rgb(76 81 164 / 90%) 100%)",
           color: "#000",
         },
       }}
