@@ -6,6 +6,13 @@ import CardMedia from "@mui/material/CardMedia";
 import PlaceIcon from "@mui/icons-material/Place";
 import { styled } from "@mui/system";
 import { ChangeLocation } from "./ChangeLocation";
+import { ForecastDate, WeatherData } from "./Interface";
+import {
+  weekday,
+  ConvertTimeUnixIntoIST,
+  formatDate,
+  lastFourDaysKeys,
+} from "./Functions";
 
 const StyledButtonGroup = styled(ButtonGroup)({
   // change the text color for all buttons
@@ -21,71 +28,6 @@ const StyledButtonGroup = styled(ButtonGroup)({
     borderColor: "#131c1470",
   },
 });
-interface ForecastDate {
-  date: number;
-  cityName: string;
-  icon: string;
-  temperature: number;
-  mainView: string;
-  visibility: number;
-  humidity: number;
-  wind: number;
-}
-interface listForcast {
-  dt: number;
-  main: {
-    temp: number;
-    feels_like: number;
-    temp_min: number;
-    temp_max: number;
-    pressure: number;
-    sea_level: number;
-    grnd_level: number;
-    humidity: number;
-    temp_kf: number;
-  };
-  weather: [
-    {
-      id: number;
-      main: string;
-      description: string;
-      icon: string;
-    }
-  ];
-  clouds: {
-    all: number;
-  };
-  wind: {
-    speed: number;
-    deg: number;
-    gust: number;
-  };
-  visibility: number;
-  pop: number;
-  sys: {
-    pod: string;
-  };
-  dt_txt: string;
-}
-interface WeatherData {
-  cod: string;
-  message: number;
-  cnt: number;
-  list: listForcast[];
-  city: {
-    id: number;
-    name: string;
-    coord: {
-      lat: number;
-      lon: number;
-    };
-    country: string;
-    population: number;
-    timezone: number;
-    sunrise: number;
-    sunset: number;
-  };
-}
 
 export const WeatherApp = () => {
   const [open, setOpen] = React.useState(false);
@@ -170,30 +112,9 @@ export const WeatherApp = () => {
       setCityName(newValue);
     }
   };
-  const weekday = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-
-  const ConvertTimeUnixIntoIST = (unixTime: number) => {
-    const convertedTime = new Date(unixTime * 1000);
-    return convertedTime;
-  };
-
-  const formatDate = (date: Date) => {
-    let ye = new Intl.DateTimeFormat("en", { year: "numeric" }).format(date);
-    let mo = new Intl.DateTimeFormat("en", { month: "short" }).format(date);
-    let da = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(date);
-    return `${da} ${mo} ${ye}`;
-  };
 
   React.useEffect(() => {
-    const key = "some-key";
+    const key = "fbd78134647d6c1d865a4bba3aa9b9d8";
     fetch(
       "https://api.openweathermap.org/data/2.5/forecast?q=" +
         cityName +
@@ -240,20 +161,7 @@ export const WeatherApp = () => {
       wind: weather?.list[key]?.wind?.speed,
     });
   };
-  const lastFourDaysKeys = [
-    {
-      key: 0,
-    },
-    {
-      key: 6,
-    },
-    {
-      key: 12,
-    },
-    {
-      key: 23,
-    },
-  ];
+
   return (
     <Stack sx={{ position: "relative" }}>
       <Card>
@@ -261,8 +169,10 @@ export const WeatherApp = () => {
           sx={{
             position: "absolute",
             padding: "2%",
+            marginLeft: "25%",
             m: "3% 20%",
-            background: "linear-gradient(152.19deg, rgb(126 172 174 / 66%) -0.04%, rgb(84 89 170 / 90%) 100%)",
+            background:
+              "linear-gradient(152.19deg, rgb(126 172 174 / 66%) -0.04%, rgb(84 89 170 / 90%) 100%)",
             width: "39rem",
             height: "28rem",
             borderRadius: "25px",
@@ -483,7 +393,7 @@ export const WeatherApp = () => {
                     }}
                     style={{
                       backgroundColor:
-                        dayIndex === data.key ? "#8389926b" : "#222831",
+                        dayIndex === data.key ? "#fff" : "#222831",
                     }}
                   >
                     <Box
@@ -492,7 +402,7 @@ export const WeatherApp = () => {
                         position: "absolute",
                         mt: "-50px",
                         ml: "-7px",
-                        color: "#fff",
+                        color: dayIndex === data.key ? "#000" : "#fff",
                         width: "30px",
                         height: "30px",
                       }}
@@ -504,7 +414,7 @@ export const WeatherApp = () => {
                     <Typography
                       sx={{
                         position: "absolute",
-                        color: "#fff",
+                        color: dayIndex === data.key ? "#000" : "#fff",
                         fontSize: "12px",
                         fontFamily: "Montserrat",
                         fontStyle: "normal",
@@ -522,7 +432,7 @@ export const WeatherApp = () => {
                     <Typography
                       sx={{
                         position: "absolute",
-                        color: "#fff",
+                        color: dayIndex === data.key ? "#000" : "#fff",
                         fontSize: "12px",
                         fontWeight: "bold",
                         fontFamily: "Montserrat",
