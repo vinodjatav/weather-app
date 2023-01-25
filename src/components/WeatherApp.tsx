@@ -6,7 +6,12 @@ import CardMedia from "@mui/material/CardMedia";
 import PlaceIcon from "@mui/icons-material/Place";
 import { styled } from "@mui/system";
 import { ChangeLocation } from "./ChangeLocation";
-import { ForecastDate, WeatherData } from "./Interface";
+import {
+  ForecastData,
+  WeatherData,
+  InitialWeatherData,
+  InitialForecastData,
+} from "./Interface";
 import {
   weekday,
   ConvertTimeUnixIntoIST,
@@ -35,72 +40,9 @@ export const WeatherApp = () => {
   const [date, setDate] = React.useState<Date>(new Date());
   const [notFoundError, setNotFoundError] = React.useState(false);
   const [dayIndex, setDayIndex] = React.useState(0);
-  const [weather, setWeather] = React.useState<WeatherData>({
-    cod: "200",
-    message: 0,
-    cnt: 5,
-    list: [
-      {
-        dt: 0,
-        main: {
-          temp: 0,
-          feels_like: 0,
-          temp_min: 0,
-          temp_max: 0,
-          pressure: 0,
-          sea_level: 0,
-          grnd_level: 0,
-          humidity: 0,
-          temp_kf: 0,
-        },
-        weather: [
-          {
-            id: 0,
-            main: "",
-            description: "",
-            icon: "",
-          },
-        ],
-        clouds: {
-          all: 0,
-        },
-        wind: {
-          speed: 0,
-          deg: 0,
-          gust: 0,
-        },
-        visibility: 0,
-        pop: 0,
-        sys: {
-          pod: "",
-        },
-        dt_txt: "",
-      },
-    ],
-    city: {
-      id: 0,
-      name: "",
-      coord: {
-        lat: 0,
-        lon: 0,
-      },
-      country: "",
-      population: 0,
-      timezone: 0,
-      sunrise: 0,
-      sunset: 0,
-    },
-  });
-  const [forecastData, setForecastData] = React.useState<ForecastDate>({
-    date: 0,
-    cityName: "",
-    icon: "",
-    temperature: 0,
-    mainView: "",
-    visibility: 0,
-    humidity: 0,
-    wind: 0,
-  });
+  const [weather, setWeather] = React.useState<WeatherData>(InitialWeatherData);
+  const [forecastData, setForecastData] =
+    React.useState<ForecastData>(InitialForecastData);
   const handleClickOpen = () => {
     setOpen(true);
   };
