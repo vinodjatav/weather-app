@@ -1,4 +1,4 @@
-# Please find the link of the application
+# Application URL
 
 [Weather Application](https://weather-app-8bf23.web.app/)
 
