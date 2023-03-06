@@ -42,13 +42,14 @@ export const ChangeLocation = (props: DialogProps) => {
       }}
       PaperProps={{
         style: {
-          background: "linear-gradient(152.19deg, rgb(102 152 155) -0.04%, rgb(76 81 164 / 90%) 100%)",
+          background:
+            "linear-gradient(152.19deg, rgb(102 152 155) -0.04%, rgb(76 81 164 / 90%) 100%)",
           color: "#000",
         },
       }}
     >
       <DialogTitle>Change Location</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ color: "#000" }}>
         <TextField
           autoFocus
           margin="dense"
@@ -58,6 +59,10 @@ export const ChangeLocation = (props: DialogProps) => {
           fullWidth
           variant="standard"
           onChange={handleChange}
+          sx={{
+            ".MuiFormLabel-root": { color: "#000" },
+            ".Mui-focused": { color: "#000" },
+          }}
         />
       </DialogContent>
       <DialogActions sx={{ justifyContent: "space-between" }}>
