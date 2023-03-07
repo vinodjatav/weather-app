@@ -56,8 +56,7 @@ export const WeatherApp = () => {
   };
 
   React.useEffect(() => {
-    // const key = "some-key";
-    const key = "fbd78134647d6c1d865a4bba3aa9b9d8";
+    const key = "some-key";
     fetch(
       "https://api.openweathermap.org/data/2.5/forecast?q=" +
         cityName +

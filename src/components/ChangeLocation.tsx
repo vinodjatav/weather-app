@@ -49,7 +49,7 @@ export const ChangeLocation = (props: DialogProps) => {
       }}
     >
       <DialogTitle>Change Location</DialogTitle>
-      <DialogContent sx={{ color: "#000" }}>
+      <DialogContent>
         <TextField
           autoFocus
           margin="dense"
@@ -59,9 +59,8 @@ export const ChangeLocation = (props: DialogProps) => {
           fullWidth
           variant="standard"
           onChange={handleChange}
-          sx={{
-            ".MuiFormLabel-root": { color: "#000" },
-            ".Mui-focused": { color: "#000" },
+          InputLabelProps={{
+            style: { color: '#000000' },
           }}
         />
       </DialogContent>
