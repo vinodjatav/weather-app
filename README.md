@@ -1,4 +1,4 @@
-# 👨🏿‍⚖️ Beautiful Weather Application(🌦) 👇👇🏻
+# 👨🏿‍⚖️ Beautiful Weather Application(🌦) 👇🏻
 
 👉🏼 [Weather Application](https://weather-app-8bf23.web.app/)
 
